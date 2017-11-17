@@ -1,0 +1,92 @@
+--- restorecond-2.7/restorecond.init.orig	2017-08-04 15:31:00.000000000 +0200
++++ restorecond-2.7/restorecond.init	2017-11-17 20:25:02.319336381 +0100
+@@ -26,35 +26,41 @@
+ # Source function library.
+ . /etc/rc.d/init.d/functions
+ 
++[ -f /etc/sysconfig/restorecond ] && . /etc/sysconfig/restorecond
++
+ [ -x /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled || exit 7
+ 
+ # Check that we are root ... so non-root users stop here
+ test $EUID = 0  || exit 4
+ 
+-test -x /usr/sbin/restorecond  || exit 5
+ test -f /etc/selinux/restorecond.conf  || exit 6
+ 
+ RETVAL=0
+ 
+ start() 
+ {
+-        echo -n $"Starting restorecond: "
++	if [ -f /var/lock/subsys/restorecond ]; then
++		msg_already_running "restorecond"
++		return
++	fi
++        msg_starting "restorecond"
+ 	unset HOME MAIL USER USERNAME
+-        daemon /usr/sbin/restorecond 
++        daemon /usr/sbin/restorecond
+ 	RETVAL=$?
+-	touch /var/lock/subsys/restorecond
+-        echo
+-	return $RETVAL
++	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/restorecond
+ }
+ 
+ stop() 
+ {
+-        echo -n $"Shutting down restorecond: "
++	if [ ! -f /var/lock/subsys/restorecond ]; then
++		msg_not_running "restorecond"
++		return
++	fi
++
++        msg_stopping "restorecond"
+ 	killproc restorecond
+ 	RETVAL=$?
+ 	rm -f  /var/lock/subsys/restorecond
+-        echo
+-	return $RETVAL
+ }
+ 
+ restart() 
+@@ -63,6 +69,16 @@
+     start
+ }
+ 
++condrestart()
++{
++	if [ ! -f /var/lock/subsys/restorecond ]; then
++		msg_not_running "restorecond"
++		RETVAL=$1
++		return
++	fi
++	restart
++}
++
+ # See how we were called.
+ case "$1" in
+   start)
+@@ -75,14 +91,17 @@
+ 	status restorecond
+ 	RETVAL=$?
+ 	;;
+-  force-reload|restart|reload)
++  restart)
+ 	restart
+ 	;;
+-  condrestart)
+-	[ -e /var/lock/subsys/restorecond ] && restart || :
++  force-reload)
++	condrestart 7
++	;;
++  try-restart|condrestart)
++	condrestart 0
+ 	;;
+   *)
+-        echo $"Usage: $0 {start|stop|restart|force-reload|status|condrestart}"
++        msg_usage "$0 {start|stop|restart|try-restart|force-reload|status}"
+         RETVAL=3
+ esac
+ 
