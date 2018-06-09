@@ -2,22 +2,22 @@
 Summary:	restorecond - daemon which corrects contexts of newly created files
 Summary(pl.UTF-8):	restorecond - demon poprawiający konteksty nowo tworzonych plików
 Name:		selinux-restorecond
-Version:	2.7
+Version:	2.8
 Release:	1
 License:	GPL v2+
 Group:		Daemons
 #Source0Download: https://github.com/SELinuxProject/selinux/wiki/Releases
-Source0:	https://raw.githubusercontent.com/wiki/SELinuxProject/selinux/files/releases/20170804/restorecond-%{version}.tar.gz
-# Source0-md5:	46f8ad0a37f955ef148d4e19b8cc8b1f
+Source0:	https://raw.githubusercontent.com/wiki/SELinuxProject/selinux/files/releases/20180524/restorecond-%{version}.tar.gz
+# Source0-md5:	cfe4e4d6184623fdcb9bc2681e693abb
 Patch0:		restorecond-init.patch
 URL:		https://github.com/SELinuxProject/selinux/wiki
 BuildRequires:	dbus-glib-devel
 BuildRequires:	glibc-devel >= 6:2.4
 BuildRequires:	pkgconfig
 BuildRequires:	pcre-devel
-BuildRequires:	libselinux-devel >= 2.7
+BuildRequires:	libselinux-devel >= 2.8
 Requires(post,preun):	/sbin/chkconfig
-Requires:	libselinux >= 2.7
+Requires:	libselinux >= 2.8
 Requires:	rc-scripts
 Obsoletes:	policycoreutils-restorecond < 2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -70,8 +70,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	MANDIR=$RPM_BUILD_ROOT%{_mandir} \
-	SYSTEMDDIR=$RPM_BUILD_ROOT/lib/systemd
+	MANDIR=%{_mandir} \
+	SYSTEMDDIR=/lib/systemd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
