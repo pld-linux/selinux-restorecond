@@ -1,4 +1,3 @@
-%include	/usr/lib/rpm/macros.perl
 Summary:	restorecond - daemon which corrects contexts of newly created files
 Summary(pl.UTF-8):	restorecond - demon poprawiający konteksty nowo tworzonych plików
 Name:		selinux-restorecond
