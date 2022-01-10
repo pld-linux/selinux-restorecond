@@ -2,7 +2,7 @@ Summary:	restorecond - daemon which corrects contexts of newly created files
 Summary(pl.UTF-8):	restorecond - demon poprawiający konteksty nowo tworzonych plików
 Name:		selinux-restorecond
 Version:	3.1
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Daemons
 #Source0Download: https://github.com/SELinuxProject/selinux/wiki/Releases
@@ -15,10 +15,12 @@ BuildRequires:	glibc-devel >= 6:2.4
 BuildRequires:	pkgconfig
 BuildRequires:	pcre-devel
 BuildRequires:	libselinux-devel >= 3.1
-BuildRequires:	rpmbuild(macros) >= 1.682
+BuildRequires:	rpmbuild(macros) >= 2.011
 Requires(post,preun):	/sbin/chkconfig
+Requires(post,preun):	systemd-units >= 1:250.1
 Requires:	libselinux >= 3.1
 Requires:	rc-scripts
+Requires:	systemd-units >= 1:250.1
 Obsoletes:	policycoreutils-restorecond < 2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -80,12 +82,14 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/chkconfig --add restorecond
 %service restorecond restart
+%systemd_user_post restorecond_user.service
 
 %preun
 if [ "$1" = "0" ]; then
 	%service restorecond stop
 	/sbin/chkconfig --del restorecond
 fi
+%systemd_user_preun restorecond_user.service
 
 %files
 %defattr(644,root,root,755)
