@@ -1,24 +1,24 @@
 Summary:	restorecond - daemon which corrects contexts of newly created files
 Summary(pl.UTF-8):	restorecond - demon poprawiający konteksty nowo tworzonych plików
 Name:		selinux-restorecond
-Version:	3.1
-Release:	2
+Version:	3.6
+Release:	1
 License:	GPL v2+
 Group:		Daemons
 #Source0Download: https://github.com/SELinuxProject/selinux/wiki/Releases
-Source0:	https://github.com/SELinuxProject/selinux/releases/download/20200710/restorecond-%{version}.tar.gz
-# Source0-md5:	8daf761739a150a7a29bb491726a6cd9
+Source0:	https://github.com/SELinuxProject/selinux/releases/download/%{version}/restorecond-%{version}.tar.gz
+# Source0-md5:	5a57dbc759c8a71dcba618f0b4b0f9e7
 Patch0:		restorecond-init.patch
 URL:		https://github.com/SELinuxProject/selinux/wiki
 BuildRequires:	glib2-devel >= 1:2.26
 BuildRequires:	glibc-devel >= 6:2.4
 BuildRequires:	pkgconfig
 BuildRequires:	pcre-devel
-BuildRequires:	libselinux-devel >= 3.1
+BuildRequires:	libselinux-devel >= 3.6
 BuildRequires:	rpmbuild(macros) >= 2.011
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun):	systemd-units >= 1:250.1
-Requires:	libselinux >= 3.1
+Requires:	libselinux >= 3.6
 Requires:	rc-scripts
 Requires:	systemd-units >= 1:250.1
 Obsoletes:	policycoreutils-restorecond < 2.7
@@ -100,6 +100,5 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/selinux/restorecond.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/selinux/restorecond_user.conf
 %{_mandir}/man8/restorecond.8*
-%lang(ru) %{_mandir}/ru/man8/restorecond.8*
 %{_sysconfdir}/xdg/autostart/restorecond.desktop
 %{_datadir}/dbus-1/services/org.selinux.Restorecond.service
