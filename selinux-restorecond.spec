@@ -59,7 +59,7 @@ się, że mają przypisane właściwe konteksty plików z polityki.
 
 %prep
 %setup -q -n restorecond-%{version}
-%patch0 -p1
+%patch -P0 -p1
 
 %build
 CFLAGS="%{rpmcflags} %{rpmcppflags} -Wall -W" \
